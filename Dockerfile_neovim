@@ -1,0 +1,39 @@
+FROM debian:9
+
+RUN apt-get update && apt-get install -y \
+    git
+RUN apt-get install -y \
+    --no-install-recommends \
+    silversearcher-ag \
+    curl \
+    neovim
+
+ENV HOME /home/xp
+RUN echo $HOME
+RUN mkdir -p $HOME
+WORKDIR $HOME
+
+# vimrc
+WORKDIR $HOME
+RUN mkdir -p .config/nvim
+WORKDIR .config/nvim
+RUN curl https://raw.githubusercontent.com/wangw469/.vim/master/vimrc >  init.vim
+
+# pathogen
+RUN mkdir -p autoload bundle
+RUN curl -LSso autoload/pathogen.vim https://tpo.pe/pathogen.vim
+
+# plugins
+WORKDIR bundle
+RUN git clone https://github.com/rking/ag.vim ag
+RUN git clone https://github.com/kien/ctrlp.vim
+RUN git clone https://github.com/scrooloose/nerdtree
+RUN git clone https://github.com/easymotion/vim-easymotion
+RUN git clone https://github.com/vim-scripts/vim-auto-save
+RUN git clone https://github.com/bronson/vim-trailing-whitespace.git
+RUN git clone https://github.com/godlygeek/tabular
+RUN git clone https://github.com/bling/vim-airline
+RUN git clone git://github.com/tpope/vim-fugitive.git
+
+WORKDIR /mnt/volume
+
